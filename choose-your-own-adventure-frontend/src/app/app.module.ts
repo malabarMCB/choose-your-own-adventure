@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { QuizComponent } from './quiz/quiz/quiz.component';
 import { QuestionComponent } from './quiz/question/question.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {HttpClientModule} from '@angular/common/http';
+import {QuestionsService} from './services/questions-service';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    HttpClientModule
   ],
-  providers: [],
+  providers: [QuestionsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

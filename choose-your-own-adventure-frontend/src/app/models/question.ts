@@ -1,6 +1,6 @@
 export interface Question {
-  Id: number;
-  Text: string;
-  PositiveAnswerQuestionId?: number;
-  NegativeAnswerQuestionId?: number;
+  id: number;
+  text: string;
+  positiveAnswerQuestionId?: number;
+  negativeAnswerQuestionId?: number;
 }
