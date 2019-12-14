@@ -5,9 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { QuizComponent } from './quiz/quiz/quiz.component';
 import { QuestionComponent } from './quiz/question/question.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {HttpClientModule} from '@angular/common/http';
 import {QuestionsService} from './services/questions-service';
+import {AppStoreModule} from './store/app-store.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import {QuestionsService} from './services/questions-service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    AppStoreModule
   ],
   providers: [QuestionsService],
   bootstrap: [AppComponent]
