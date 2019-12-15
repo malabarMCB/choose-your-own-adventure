@@ -1,1 +1,3 @@
-<app-decision-tree></app-decision-tree>
+<app-decision-tree *ngIf="this.questionsTree" [dataSource]="this.questionsTree"></app-decision-tree>
+<button (click)="highlightAnsweredQuestions()">Highlight</button>
+<button (click)="playAgain()">Play again</button>

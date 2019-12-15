@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {QuestionTreeNode} from '../../models/question-tree-node';
+import {QuestionAnswer} from '../../models/question-answer.enum';
 
 declare var $: any;
 
@@ -9,33 +11,39 @@ declare var $: any;
 })
 export class DecisionTreeComponent implements OnInit {
 
+  @Input() dataSource: QuestionTreeNode;
+
   constructor() { }
 
   ngOnInit() {
-
-    const datasource = {
-      name: 'Lao Lao',
-      title: 'general manager',
-      children: [
-        { name: 'Bo Miao', title: 'department manager' },
-        { name: 'Su Miao', title: 'department manager',
-          children: [
-            { name: 'Tie Hua', title: 'senior engineer' },
-            { name: 'Hei Hei', title: 'senior engineer',
-              children: [
-                { name: 'Dan Dan', title: 'engineer' }
-              ]
-            },
-            { name: 'Pang Pang', title: 'senior engineer' }
-          ]
-        },
-        { name: 'Hong Miao', title: 'department manager' }
-      ]
-    };
     $('#chart-container').orgchart({
-      data : datasource,
-      nodeContent: 'title'
+      data : this.dataSource,
+      nodeTemplate: this.questionNodeTemplate
     });
   }
 
+  private questionNodeTemplate(data: QuestionTreeNode): string {
+    let template = '';
+
+    if (data.type != null) {
+      template = `
+        <div style="width: 100%; min-width: 130px" class="title">
+        ${data.type === QuestionAnswer.Positive ? 'Yes' : 'No'}</div>`; /*todo extract it to css file*/
+    }
+
+    template += `
+        <div >${data.text}</div>
+        <input class="questionId" style="display: none" value="${data.id}">`;
+
+    return template;
+  }
+
+  highlightNodes(ids: number[]) {
+    document.querySelectorAll('.questionId').forEach(elem => {
+      const val = Number(elem.getAttribute('value'));
+      if ( ids.indexOf(val) !== -1) {
+        elem.parentElement.style.backgroundColor = 'rgba(238,217,54,.5)';
+      }
+    });
+  }
 }

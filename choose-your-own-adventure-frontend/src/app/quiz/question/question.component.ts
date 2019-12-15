@@ -1,9 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-
-export enum QuestionAnswer {
-  Positive,
-  Negative
-}
+import {QuestionAnswer} from '../../models/question-answer.enum';
 
 @Component({
   selector: 'app-quiz-item',

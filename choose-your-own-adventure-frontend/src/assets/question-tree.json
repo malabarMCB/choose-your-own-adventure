@@ -1,0 +1,73 @@
+{
+  "id": 1,
+  "text": "Do I want a doughnut?",
+  "type": null,
+  "children": [
+    {
+      "id": 2,
+      "text": "Do I deserve it?",
+      "type": 1,
+      "children": [
+        {
+          "id": 4,
+          "text": "Are you sure?",
+          "type": 1,
+          "children": [
+            {
+              "id": 6,
+              "text": "Are you really sure?",
+              "type": 1,
+              "children": [
+                {
+                  "id": 10,
+                  "text": "Get it.",
+                  "type": 1,
+                  "children": null
+                },
+                {
+                  "id": 11,
+                  "text": "Why not to take a cake?",
+                  "type": 0,
+                  "children": null
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "text": "Do jumping jacks first.",
+              "type": 0,
+              "children": null
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "text": "Is it a good doughnut?",
+          "type": 0,
+          "children": [
+            {
+              "id": 8,
+              "text": "What are you waiting for? Grab it now.",
+              "type": 1,
+              "children": null
+            },
+            {
+              "id": 9,
+              "text": "Wait 'till you find a sinful, unforgettable doughnut.",
+              "type": 0,
+              "children": null
+
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Maybe you want an apple?",
+      "type": 0,
+      "children": null
+
+    }
+  ]
+}
