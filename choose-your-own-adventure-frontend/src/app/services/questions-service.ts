@@ -15,4 +15,8 @@ export class QuestionsService {
   getQuestion(id: number): Observable<Question> {
     return this.http.get<Question>(`${this.baseUrl}/questions/${id}`);
   }
+
+  getAllQuestions(): Observable<Question[]> {
+    return this.http.get<Question[]>(`${this.baseUrl}/questions`);
+  }
 }

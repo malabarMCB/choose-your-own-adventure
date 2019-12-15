@@ -30,17 +30,12 @@ export class QuizComponent implements OnInit {
       ? this.currentQuestion.positiveAnswerQuestionId
       : this.currentQuestion.negativeAnswerQuestionId;
 
-    if (!nextQuestionId) {
-      console.log('game over');
-    }
-
     this.setCurrentQuestion(nextQuestionId);
   }
 
   private setCurrentQuestion(id: number) {
     this.questionService.getQuestion(id).subscribe(question => {
       if (!question.negativeAnswerQuestionId && !question.positiveAnswerQuestionId) {
-        console.log('it`s time to finish');
         this.router.navigate(['result']);
       }
       this.currentQuestion = question;
