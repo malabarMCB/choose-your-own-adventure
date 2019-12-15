@@ -2,6 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {QuestionsService} from '../../services/questions-service';
 import {QuestionAnswer} from '../question/question.component';
 import {Question} from '../../models/question';
+import {AppState} from '../../store/app-store.reducer';
+import {Store} from '@ngrx/store';
+import * as Actions from '../../store/app-store.actions';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-quiz',
@@ -11,14 +15,17 @@ import {Question} from '../../models/question';
 export class QuizComponent implements OnInit {
   currentQuestion: Question;
 
-  constructor(private readonly questionService: QuestionsService) { }
+  constructor(private readonly questionService: QuestionsService,
+              private readonly store: Store<AppState>,
+              private readonly router: Router) { }
 
   ngOnInit() {
     this.setCurrentQuestion(1);
   }
 
   onQuestionAnswered(answer: QuestionAnswer) {
-    console.log('answer is ' + answer);
+    this.store.dispatch(Actions.addAnsweredQuestion({question: this.currentQuestion}));
+
     const nextQuestionId = answer === QuestionAnswer.Positive
       ? this.currentQuestion.positiveAnswerQuestionId
       : this.currentQuestion.negativeAnswerQuestionId;
@@ -32,7 +39,10 @@ export class QuizComponent implements OnInit {
 
   private setCurrentQuestion(id: number) {
     this.questionService.getQuestion(id).subscribe(question => {
-      console.log(question);
+      if (!question.negativeAnswerQuestionId && !question.positiveAnswerQuestionId) {
+        console.log('it`s time to finish');
+        this.router.navigate(['result']);
+      }
       this.currentQuestion = question;
     });
   }
