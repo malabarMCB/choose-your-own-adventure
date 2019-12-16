@@ -27,7 +27,7 @@ export const getAnsweredQuestionsIds =
     state => state.answeredQuestions.map(question => question.id)
   );
 
-export const getQuizStatus =
+export const isQuizFinished =
   createSelector(
     getAppState,
     state => state.isQuizFinished
