@@ -14,3 +14,12 @@ export const setQuizStatus = createAction(
 export const clearAnsweredQuestions = createAction(
   '[App] Clear answered questions'
 );
+
+export const setCurrentQuestion = createAction(
+  '[App] Set current question',
+  props<{question: Question}>()
+);
+
+export const clearCurrentQuestion = createAction(
+  '[App] Clear current question'
+);

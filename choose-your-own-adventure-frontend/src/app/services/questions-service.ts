@@ -18,4 +18,8 @@ export class QuestionsService {
   getAllQuestions(): Observable<QuestionTreeNode> {
     return this.http.get<QuestionTreeNode>(`${this.baseUrl}/questions/tree`);
   }
+
+  getFirstQuestion(): Observable<Question> {
+    return this.http.get<Question>(`${this.baseUrl}/questions/first`);
+  }
 }
