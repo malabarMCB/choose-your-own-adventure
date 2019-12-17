@@ -19,15 +19,9 @@ namespace Domain
 
         public Question GetQuestion(int id)
         {
-            var question = _context.Questions.AsNoTracking().SingleOrDefault(x => x.Id == id);
+            var questionEntity = _context.Questions.AsNoTracking().SingleOrDefault(x => x.Id == id);
 
-            return question == null ? null : new Question
-            {
-                Id = question.Id,
-                Text = question.Text,
-                NegativeAnswerQuestionId = question.NegativeAnswerQuestionId,
-                PositiveAnswerQuestionId = question.PositiveAnswerQuestionId
-            };
+            return questionEntity?.ToQuestion();
         }
 
         public QuestionTreeNode GetQuestionsTree()
@@ -90,6 +84,15 @@ namespace Domain
             FillTree(result, joinedQuestions);
 
             return result;
+        }
+
+        public Question GetFirstQuestion()
+        {
+            return _context.Questions
+                .AsNoTracking()
+                .Where(question => !_context.Questions.Any(x => x.PositiveAnswerQuestionId == question.Id))
+                .SingleOrDefault(question => !_context.Questions.Any(x => x.NegativeAnswerQuestionId == question.Id))
+                ?.ToQuestion();
         }
     }
 }

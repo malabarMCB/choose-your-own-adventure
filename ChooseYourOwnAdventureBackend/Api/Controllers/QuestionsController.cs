@@ -36,5 +36,16 @@ namespace Api.Controllers
 
             return Ok(tree);
         }
+
+        [HttpGet("first")]
+        public IActionResult GetFirstQuestion()
+        {
+            var question = _questionsService.GetFirstQuestion();
+
+            if (question == null)
+                return NotFound();
+
+            return Ok(question);
+        }
     }
 }

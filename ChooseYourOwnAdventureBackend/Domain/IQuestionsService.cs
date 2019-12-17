@@ -8,5 +8,7 @@ namespace Domain
         Question GetQuestion(int id);
 
         QuestionTreeNode GetQuestionsTree();
+
+        Question GetFirstQuestion();
     }
 }

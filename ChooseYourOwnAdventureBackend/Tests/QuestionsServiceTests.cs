@@ -73,22 +73,8 @@ namespace Tests
         public void ShouldReturnTree()
         {
             //arrange
-            var questions = new List<QuestionEntity>
-            {
-                new QuestionEntity{ Id = 1, Text = "Do I want a doughnut?", PositiveAnswerQuestionId = 2, NegativeAnswerQuestionId = 3},
-                new QuestionEntity{ Id = 2, Text = "Do I deserve it?", PositiveAnswerQuestionId = 4, NegativeAnswerQuestionId = 5},
-                new QuestionEntity{ Id = 3, Text = "Maybe you want an apple?"},
-                new QuestionEntity{ Id = 4, Text = "Are you sure?", PositiveAnswerQuestionId = 6, NegativeAnswerQuestionId = 7},
-                new QuestionEntity{ Id = 5, Text = "Is it a good doughnut?", PositiveAnswerQuestionId = 8, NegativeAnswerQuestionId = 9},
-                new QuestionEntity{ Id = 6, Text = "Are you really sure?", PositiveAnswerQuestionId = 10, NegativeAnswerQuestionId = 11},
-                new QuestionEntity{ Id = 7, Text = "Do jumping jacks first."},
-                new QuestionEntity{ Id = 8, Text = "What are you waiting for? Grab it now."},
-                new QuestionEntity{ Id = 9, Text = "Wait `till you find a sinful, unforgettable doughnut."},
-                new QuestionEntity{ Id = 10, Text = "Get it."},
-                new QuestionEntity{ Id = 11, Text = "Why not to take a cake?"}
-            };
-
             var context = TestDbContextCreator.Create(nameof(ShouldReturnTree));
+            var questions = TestDataContainer.GetQuestionEntities();
             context.Questions.AddRange(questions);
             context.SaveChanges();
 
@@ -182,6 +168,46 @@ namespace Tests
 
             //assert
             actual.ShouldBeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void ShouldReturnNullIfFirstQuestionIsMissing()
+        {
+            //arrange
+            var context = TestDbContextCreator.Create(nameof(ShouldReturnNullIfFirstQuestionIsMissing));
+            var sut = new QuestionsService(context);
+
+            //act
+            var actual = sut.GetFirstQuestion();
+
+            //arrange
+            actual.Should().BeNull();
+        }
+
+        [Fact]
+        public void ShouldReturnFirstQuestion()
+        {
+            //arrange
+            var context = TestDbContextCreator.Create(nameof(ShouldReturnFirstQuestion));
+            var questions = TestDataContainer.GetQuestionEntities();
+            context.Questions.AddRange(questions);
+            context.SaveChanges();
+
+            var sut = new QuestionsService(context);
+
+            var expected = new Question
+            {
+                Id = 1,
+                Text = "Do I want a doughnut?",
+                PositiveAnswerQuestionId = 2,
+                NegativeAnswerQuestionId = 3
+            };
+
+            //act
+            var actual = sut.GetFirstQuestion();
+
+            //arrange
+            actual.Should().BeEquivalentTo(expected);
         }
     }
 }
