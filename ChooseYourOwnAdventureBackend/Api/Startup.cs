@@ -39,6 +39,11 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins(Configuration["Cors"]);
+            });
+
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 

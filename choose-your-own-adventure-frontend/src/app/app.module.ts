@@ -10,6 +10,7 @@ import {QuestionsService} from './services/questions-service';
 import {AppStoreModule} from './store/app-store.module';
 import { ResultComponent } from './result/result/result.component';
 import { DecisionTreeComponent } from './result/decision-tree/decision-tree.component';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,10 @@ import { DecisionTreeComponent } from './result/decision-tree/decision-tree.comp
     HttpClientModule,
     AppStoreModule
   ],
-  providers: [QuestionsService],
+  providers: [
+    QuestionsService,
+    {provide: 'API_URL', useValue: environment.apiUrl}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
