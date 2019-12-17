@@ -29,7 +29,12 @@ namespace Api.Controllers
         [HttpGet("tree")]
         public IActionResult GetQuestionsTree()
         {
-            return Ok();
+            var tree = _questionsService.GetQuestionsTree();
+
+            if (tree == null)
+                return NotFound();
+
+            return Ok(tree);
         }
     }
 }
