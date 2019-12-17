@@ -36,7 +36,8 @@ export class ResultComponent implements OnInit, OnDestroy {
     });
   }
 
-  highlightAnsweredQuestions(): boolean {
+  highlightAnsweredQuestions(button: HTMLButtonElement): boolean {
+    button.disabled = true;
     this.decisionTree.highlightNodes(this.answeredQuestionsIds);
     return false;
   }
