@@ -1,6 +1,7 @@
 import { QuestionsService } from './questions-service';
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {HttpClient} from '@angular/common/http';
 
 describe('QuestionsService', () => {
   let service: QuestionsService;
@@ -8,8 +9,7 @@ describe('QuestionsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        QuestionsService,
-        {provider: 'API_IRL', useValue: 'test url'}
+        [{provide: QuestionsService, deps: [HttpClient], useFactory: (http: HttpClient) => new QuestionsService('test.com', http)}],
       ],
       imports: [HttpClientTestingModule]
     });
