@@ -26,73 +26,69 @@ namespace Domain
 
         public QuestionTreeNode GetQuestionsTree()
         {
-            QuestionTreeNode ConvertToQuestionTreeNode(QuestionEntity entity, QuestionAnswer? type)
+            void FillCteResult(QuestionTreeNode node, QuestionEntity currentEntity, Queue<QuestionEntity> entities)
             {
-                return new QuestionTreeNode
-                {
-                    Id = entity.Id,
-                    Text = entity.Text,
-                    Type = type,
-                };
-            }
-
-            void FillTree(QuestionTreeNode node, List<QuestionEntity> questions)
-            {
-                var question = questions.FirstOrDefault(x => x.Id == node.Id);
-                if(question == null)
-                    return;
-                questions.Remove(question);
-
-
-                if (question.PositiveAnswerQuestion != null && question.NegativeAnswerQuestion != null)
-                {
+                if( currentEntity.PositiveAnswerQuestionId.HasValue || currentEntity.NegativeAnswerQuestionId.HasValue)
                     node.Children = new List<QuestionTreeNode>();
-
-                    var positiveAnswer = ConvertToQuestionTreeNode(question.PositiveAnswerQuestion, QuestionAnswer.Positive);
-                    FillTree(positiveAnswer, questions);
-                    node.Children.Add(positiveAnswer);
-
-                    var negativeAnswer = ConvertToQuestionTreeNode(question.NegativeAnswerQuestion, QuestionAnswer.Negative);
-                    FillTree(negativeAnswer, questions);
-                    node.Children.Add(negativeAnswer);
+                else
+                {
+                    return;
                 }
+
+                QuestionEntity positiveEntity = null;
+                QuestionTreeNode positiveNode = null;
+
+                QuestionEntity negativeEntity = null;
+                QuestionTreeNode negativeNode = null;
+
+                if (currentEntity.PositiveAnswerQuestionId.HasValue)
+                {
+                    positiveEntity = entities.Dequeue();
+                    positiveNode = positiveEntity.ToQuestionTreeNode(QuestionAnswer.Positive);
+                    node.Children.Add(positiveNode);
+                }
+
+                if (currentEntity.NegativeAnswerQuestionId.HasValue)
+                {
+                    negativeEntity = entities.Dequeue();
+                    negativeNode = negativeEntity.ToQuestionTreeNode(QuestionAnswer.Negative);
+                    node.Children.Add(negativeNode);
+                }
+
+                if(negativeNode != null)
+                    FillCteResult(negativeNode, negativeEntity, entities);
+
+                if(positiveEntity != null)
+                    FillCteResult(positiveNode, positiveEntity, entities);
             }
 
-            var query = from questions in _context.Questions
-                join positiveAnswers in _context.Questions
-                    on questions.PositiveAnswerQuestionId equals positiveAnswers.Id
-                join negativeAnswers in _context.Questions
-                    on questions.NegativeAnswerQuestionId equals negativeAnswers.Id
-                select new QuestionEntity
-                {
-                    Id = questions.Id,
-                    PositiveAnswerQuestionId = questions.PositiveAnswerQuestionId,
-                    NegativeAnswerQuestionId = questions.NegativeAnswerQuestionId,
-                    Text = questions.Text,
-                    PositiveAnswerQuestion = positiveAnswers,
-                    NegativeAnswerQuestion = negativeAnswers
-                };
-
-            var joinedQuestions = query.AsNoTracking().ToList();
-
-            if (joinedQuestions.Count == 0)
+            var firstQuestion = GetFirstQuestionEntityAsNoTracking();
+            if (firstQuestion == null)
                 return null;
 
-            var firstQuestion = joinedQuestions.First();
-            var result = ConvertToQuestionTreeNode(firstQuestion, null);
+            var query = _context.Questions.FromSqlRaw("exec GetQuestionsTree {0}", firstQuestion.Id).AsNoTracking();
 
-            FillTree(result, joinedQuestions);
+            var entities = new Queue<QuestionEntity>(query);
+
+            var root = entities.Dequeue();
+            var result = root.ToQuestionTreeNode(null);
+
+            FillCteResult(result, root, entities);
 
             return result;
         }
 
         public Question GetFirstQuestion()
         {
+            return GetFirstQuestionEntityAsNoTracking()?.ToQuestion();
+        }
+
+        private QuestionEntity GetFirstQuestionEntityAsNoTracking()
+        {
             return _context.Questions
                 .AsNoTracking()
                 .Where(question => !_context.Questions.Any(x => x.PositiveAnswerQuestionId == question.Id))
-                .SingleOrDefault(question => !_context.Questions.Any(x => x.NegativeAnswerQuestionId == question.Id))
-                ?.ToQuestion();
+                .SingleOrDefault(question => !_context.Questions.Any(x => x.NegativeAnswerQuestionId == question.Id));
         }
     }
 }
