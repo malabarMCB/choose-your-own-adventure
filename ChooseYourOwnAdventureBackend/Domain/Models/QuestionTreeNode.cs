@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DataAccess.Entities;
 
 namespace Domain.Models
 {
@@ -11,5 +12,18 @@ namespace Domain.Models
         public QuestionAnswer? Type { get; set; }
 
         public List<QuestionTreeNode> Children { get; set; }
+    }
+
+    public static class QuestionTreeNodeExtensions
+    {
+        public static QuestionTreeNode ToQuestionTreeNode(this QuestionEntity entity, QuestionAnswer? type)
+        {
+            return new QuestionTreeNode
+            {
+                Id = entity.Id,
+                Text = entity.Text,
+                Type = type,
+            };
+        }
     }
 }

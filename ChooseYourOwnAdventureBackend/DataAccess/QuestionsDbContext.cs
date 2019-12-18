@@ -24,6 +24,8 @@ namespace DataAccess
                 .HasOne(x => x.PositiveAnswerQuestion)
                 .WithMany(x => x.InverseNavigationPositiveAnswerQuestion)
                 .HasForeignKey(x => x.PositiveAnswerQuestionId);
+
+            modelBuilder.Entity<QuestionEntity>().HasData(InitialDataProvider.QuestionEntityInitialData);
         }
     }
 }
